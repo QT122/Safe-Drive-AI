@@ -1,0 +1,96 @@
+[2025-07-07 18:14:59] Action detection：Detected closing of eyes
+[2025-07-07 18:14:59] Action Detection：Detected closing of eyes
+[2025-07-07 18:15:23] Action detection：Detected closing of eyes
+[2025-07-07 18:15:23] Action Detection：Detected closing of eyes
+[2025-07-07 18:15:26] Action detection：Detected closing of eyes
+[2025-07-07 18:15:26] Action Detection：Detected closing of eyes
+[2025-07-07 18:15:31] Action detection：Detected closing of eyes
+[2025-07-07 18:15:31] Action Detection：Detected closing of eyes
+[2025-07-07 18:15:33] Action detection：Detected closing of eyes
+[2025-07-07 18:15:33] Action Detection：Detected closing of eyes
+[2025-07-07 18:15:36] Action detection：Detected closing of eyes
+[2025-07-07 18:15:36] Action detection：Detected that the hand has left the steering wheel
+[2025-07-07 18:15:36] Action Detection：Detected closing of eyes
+[2025-07-07 18:15:36] Action Detection：Detected that the hand has left the steering wheel
+[2025-07-07 18:15:38] Action detection：Detected closing of eyes
+[2025-07-07 18:15:38] Action Detection：Detected closing of eyes
+[2025-07-07 18:15:41] Action detection：Detected closing of eyes
+[2025-07-07 18:15:41] Action detection：Detected an object
+[2025-07-07 18:15:41] Action Detection：Detected closing of eyes
+[2025-07-07 18:15:41] Action Detection：Detected an object
+[2025-07-07 18:15:46] Action detection：Detected closing of eyes
+[2025-07-07 18:15:46] Action Detection：Detected closing of eyes
+[2025-07-07 18:15:48] Action detection：Detected closing of eyes
+[2025-07-07 18:15:48] Action detection：Detected an object
+[2025-07-07 18:15:48] Action Detection：Detected closing of eyes
+[2025-07-07 18:15:48] Action Detection：Detected an object
+[2025-07-07 18:15:53] Action detection：Detected closing of eyes
+[2025-07-07 18:15:53] Action Detection：Detected closing of eyes
+[2025-07-07 18:15:56] Action detection：Detected yawning
+[2025-07-07 18:15:56] Action Detection：Detected yawning
+[2025-07-07 18:16:03] Action detection：Detected closing of eyes
+[2025-07-07 18:16:03] Action detection：Detected yawning
+[2025-07-07 18:16:03] Action detection：Detected an object
+[2025-07-07 18:16:03] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:03] Action Detection：Detected yawning
+[2025-07-07 18:16:03] Action Detection：Detected an object
+[2025-07-07 18:16:06] Action detection：Detected yawning
+[2025-07-07 18:16:06] Action Detection：Detected yawning
+[2025-07-07 18:16:08] Action detection：Detected closing of eyes
+[2025-07-07 18:16:08] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:11] Action detection：Detected closing of eyes
+[2025-07-07 18:16:11] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:13] Action detection：Detected closing of eyes
+[2025-07-07 18:16:13] Action detection：Detected yawning
+[2025-07-07 18:16:13] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:13] Action Detection：Detected yawning
+[2025-07-07 18:16:16] Action detection：Detected closing of eyes
+[2025-07-07 18:16:16] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:18] Action detection：Detected closing of eyes
+[2025-07-07 18:16:18] Action detection：Detected yawning
+[2025-07-07 18:16:18] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:18] Action Detection：Detected yawning
+[2025-07-07 18:16:21] Action detection：Detected closing of eyes
+[2025-07-07 18:16:21] Action detection：Detected yawning
+[2025-07-07 18:16:21] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:21] Action Detection：Detected yawning
+[2025-07-07 18:16:23] Action detection：Detected closing of eyes
+[2025-07-07 18:16:23] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:26] Action detection：Detected closing of eyes
+[2025-07-07 18:16:26] Action detection：Detected yawning
+[2025-07-07 18:16:26] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:26] Action Detection：Detected yawning
+[2025-07-07 18:16:28] Action detection：Detected closing of eyes
+[2025-07-07 18:16:28] Action detection：Detected yawning
+[2025-07-07 18:16:28] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:28] Action Detection：Detected yawning
+[2025-07-07 18:16:31] Action detection：Detected closing of eyes
+[2025-07-07 18:16:31] Action detection：Detected yawning
+[2025-07-07 18:16:31] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:31] Action Detection：Detected yawning
+[2025-07-07 18:16:33] Action detection：Detected closing of eyes
+[2025-07-07 18:16:33] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:36] Action detection：Detected closing of eyes
+[2025-07-07 18:16:36] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:41] Action detection：Detected closing of eyes
+[2025-07-07 18:16:41] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:43] Action detection：Detected closing of eyes
+[2025-07-07 18:16:43] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:46] Action detection：Detected closing of eyes
+[2025-07-07 18:16:46] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:48] Action detection：Detected an object
+[2025-07-07 18:16:48] Action Detection：Detected an object
+[2025-07-07 18:16:51] Action detection：Detected closing of eyes
+[2025-07-07 18:16:51] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:56] Action detection：Detected closing of eyes
+[2025-07-07 18:16:56] Action detection：Detected yawning
+[2025-07-07 18:16:56] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:56] Action Detection：Detected yawning
+[2025-07-07 18:16:58] Action detection：Detected closing of eyes
+[2025-07-07 18:16:58] Action detection：Detected yawning
+[2025-07-07 18:16:58] Action Detection：Detected closing of eyes
+[2025-07-07 18:16:58] Action Detection：Detected yawning
+[2025-07-07 18:17:30] Action detection：Detected an object
+[2025-07-07 18:17:30] Action Detection：Detected an object
+[2025-07-07 18:17:50] Action detection：Detected an object
+[2025-07-07 18:17:50] Action Detection：Detected an object

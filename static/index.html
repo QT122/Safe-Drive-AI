@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Driver Status Monitoring</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .dashboard {
+      width: 100%;
+      max-width: 1400px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .status-indicator {
+      text-align: center;
+      font-size: 3rem;
+      font-weight: bold;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      transition: background-color 0.5s, color 0.5s;
+      background-color: #333;
+    }
+
+    .status-indicator.safe {
+      background-color: #28a745;
+      color: #ffffff;
+    }
+
+    .status-indicator.unsafe {
+      background-color: #dc3545;
+      color: #ffffff;
+    }
+
+    .main-content {
+      display: flex;
+      flex-grow: 1;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 20px;
+      min-height: 0;
+    }
+
+    .data-panel {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .data-panel h3 {
+      margin-top: 0;
+      color: #ffffff;
+      border-bottom: 2px solid #333;
+      padding-bottom: 10px;
+    }
+
+    .data-panel ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .data-panel li {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #333;
+      font-size: 1.1rem;
+    }
+
+    .data-panel li:last-child {
+      border-bottom: none;
+    }
+
+    .value {
+      font-weight: bold;
+    }
+
+    .value.yes { color: #28a745; }
+    .value.no { color: #dc3545; }
+
+    .video-container {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    #camera-feed {
+      width: 100%;
+      height: auto;
+      max-height: 100%;
+      display: block;
+      transform: scaleX(-1);
+    }
+
+    #log-list {
+      margin-top: 20px;
+      max-height: 200px;
+      overflow: auto;
+      font-size: 0.95rem;
+      background-color: #1e1e1e;
+      padding: 10px;
+      border-radius: 8px;
+      list-style: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <div id="status-display" class="status-indicator">
+      WAITING...
+    </div>
+
+    <div class="main-content">
+      <div class="data-panel">
+        <h3>Driver Behavior</h3>
+        <ul>
+          <li><span>Class:</span><span id="class-name" class="value">--</span></li>
+          <li><span>Objects Detected:</span><span id="objects" class="value">--</span></li>
+          <li><span>Hands Off:</span><span id="hands-off" class="value">--</span></li>
+          <li><span>Extra Hand:</span><span id="extra-hand" class="value">--</span></li>
+          <li><span>Seat belt:</span><span id="with_seatbelt" class="value">--</span></li>
+        </ul>
+      </div>
+
+      <div class="video-container">
+        <video id="camera-feed" autoplay playsinline></video>
+      </div>
+
+      <div class="data-panel">
+        <h3 id="fatigue-title">Fatigue</h3>
+        <ul>
+          <li><span>Average EAR:</span><span id="avg_ear" class="value">--</span></li>
+          <li><span>Average MAR:</span><span id="avg_mar" class="value">--</span></li>
+          <li><span>Blink Count:</span><span id="blink-count" class="value">--</span></li>
+          <li><span>Yawn Count:</span><span id="yawn-count" class="value">--</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <ul id="log-list"></ul>
+  </div>
+
+<script>
+function speakFatigue(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.pitch = 1;
+  utterance.rate = 1;
+  speechSynthesis.speak(utterance);
+}
+
+const behaviorSpeechMap = {
+  "no_belt": "Warning: seatbelt not detected.",
+  "disturb": "Warning: driver distracted.",
+  "phone": "Warning: phone usage detected.",
+  "eat/drink": "Warning: eating or drinking detected."
+};
+
+const video = document.getElementById('camera-feed');
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => { video.srcObject = stream; })
+  .catch(err => { console.error('无法打开摄像头:', err); });
+
+function setColoredValue(id, value, colorIfYes, colorIfNo) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isYes = value === 1;
+  el.textContent = isYes ? 'Yes' : 'No';
+  el.style.color = isYes ? colorIfYes : colorIfNo;
+}
+
+// 状态记录
+const lastState = {
+  className: '',
+  extra_hand: 0,
+  hands_off: 0,
+  objects: 0,
+  fatigueWarned: false,
+  lastViolationsStr: '',
+  lastViolationsTime: 0,
+};
+
+function updateUI(data) {
+  // 状态显示条
+  const status = document.getElementById('status-display');
+  if (status) {
+    const name = data.name || 'Driver';
+    status.textContent = `Dear ${name}`;
+    const isUnsafe = data.class_name !== "normal" || data.extra_hand || data.hands_off || data.objects;
+    status.classList.toggle('unsafe', isUnsafe);
+    status.classList.toggle('safe', !isUnsafe);
+  }
+
+  // 类别播报
+  const classNameEl = document.getElementById('class-name');
+  const className = data.class_name || '--';
+  if (classNameEl) {
+    classNameEl.textContent = className;
+    const isDanger = className.toLowerCase() !== 'normal';
+    classNameEl.style.color = isDanger ? '#dc3545' : '#28a745';
+
+    if (className !== lastState.className && behaviorSpeechMap[className]) {
+      speakFatigue(behaviorSpeechMap[className]);
+    }
+    lastState.className = className;
+  }
+
+  // 违规项播报（带冷却）
+  const speakIfChanged = (key, value, text) => {
+    const prev = lastState[key];
+    if (value === 1 && prev !== 1) speakFatigue(text);
+    lastState[key] = value;
+  };
+
+  speakIfChanged('extra_hand', data.extra_hand, 'Warning: extra hand detected.');
+  speakIfChanged('hands_off', data.hands_off, 'Warning: hands off the steering wheel.');
+  speakIfChanged('objects', data.objects, 'Warning: object detected.');
+  speakIfChanged('with_seatbelt', data.with_seatbelt, 'Warning: seat belt not detected.');
+
+  setColoredValue('extra-hand', data.extra_hand, '#dc3545', '#28a745');
+  setColoredValue('hands-off', data.hands_off, '#dc3545', '#28a745');
+  setColoredValue('objects', data.objects, '#dc3545', '#28a745');
+  setColoredValue('with_seatbelt', data.with_seatbelt, '#28a745', '#dc3545');
+
+  document.getElementById("avg_ear").textContent = (data.avg_ear || 0).toFixed(3);
+  document.getElementById("avg_mar").textContent = (data.avg_mar || 0).toFixed(3);
+  document.getElementById("blink-count").textContent = data.blink_count ?? '--';
+  document.getElementById("yawn-count").textContent = data.yawn_count ?? '--';
+
+  // 疲劳模块
+  const fatigueTitle = document.getElementById("fatigue-title");
+  const fatigued = data.blink_count >= 2 || data.yawn_count >= 2;
+
+  fatigueTitle.textContent = fatigued ? "Fatigue (Warning)" : "Fatigue";
+  fatigueTitle.style.color = fatigued ? "red" : "#ffffff";
+
+  if (fatigued && !lastState.fatigueWarned) {
+    speakFatigue("Warning: signs of driver fatigue detected. Please take a break.");
+  }
+  lastState.fatigueWarned = fatigued;
+
+  // === 日志记录逻辑 ===
+  const violations = [];
+  if (data.class_name !== 'normal') violations.push(`Abnormal driving: ${data.class_name}`);
+  if (data.extra_hand) violations.push('Extra hand detected');
+  if (data.hands_off) violations.push('Hands off steering wheel');
+  if (data.objects) violations.push('Object detected on driver');
+  if (data.seat_belt) violations.push('No seat belt detected');
+  if (data.blink_count >= 3) violations.push('Frequent blinking');
+  if (data.yawn_count >= 1) violations.push('Yawning detected');
+
+  const now = Math.floor(Date.now() / 1000);
+  const violationsStr = violations.join('|');
+  const logList = document.getElementById("log-list");
+
+  if (violationsStr !== lastState.lastViolationsStr || now - lastState.lastViolationsTime >= 5) {
+    const timestamp = new Date().toLocaleTimeString();
+    violations.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `[${timestamp}] ${item}`;
+      logList.appendChild(li);
+    });
+
+    // 保持最多50条
+    while (logList.children.length > 50) {
+      logList.removeChild(logList.firstChild);
+    }
+
+    logList.scrollTop = logList.scrollHeight;
+    lastState.lastViolationsStr = violationsStr;
+    lastState.lastViolationsTime = now;
+  }
+}
+
+// 截图 + 上传
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+
+function captureAndUpload() {
+  if (!video.videoWidth || !video.videoHeight) return;
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  canvas.toBlob(blob => {
+    const formData = new FormData();
+    formData.append('image', blob, 'frame.jpg');
+
+    fetch('http://127.0.0.1:5000/upload', { method: 'POST', body: formData })
+      .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+      .then(() => fetch(`http://127.0.0.1:5000/result.json?ts=${Date.now()}`))
+      .then(res => res.json())
+      .then(updateUI)
+      .catch(err => console.error("❌ 错误:", err.message));
+  }, 'image/jpeg');
+}
+
+// 每500ms检测
+setInterval(captureAndUpload, 500);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "predicted_class": 4,
+  "class_name": "normal",
+  "class_probabilities": [
+    0.0003,
+    0.0001,
+    0.0002,
+    0.0001,
+    0.9994
+  ],
+  "objects": 1,
+  "with_seatbelt": 0,
+  "without_seatbelt": 0,
+  "extra_hand": 0,
+  "hands_off": 1,
+  "hands_on": 0,
+  "wheel": 0.0,
+  "name": "Unknown",
+  "avg_ear": 0,
+  "avg_mar": 0,
+  "blink_count": 0,
+  "yawn_count": 0,
+  "violations": [
+    [
+      "Action Detection",
+      "Detected an object"
+    ]
+  ]
+}

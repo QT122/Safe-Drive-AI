@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Driver Score Panel</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .score {
+      font-size: 3rem;
+      font-weight: bold;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .green { background-color: #28a745; color: white; }
+    .yellow { background-color: #ffc107; color: black; }
+    .red { background-color: #dc3545; color: white; }
+
+    ul {
+      width: 100%;
+      max-width: 800px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      overflow-y: auto;
+      max-height: 500px;
+    }
+
+    li {
+      background-color: #1e1e1e;
+      border-left: 6px solid #dc3545;
+      margin-bottom: 10px;
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-size: 1.1rem;
+    }
+
+    .warning-msg {
+      color: red;
+      font-size: 2rem;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚗 Driver Behavior Score</h1>
+  <div id="score-display" class="score">Loading...</div>
+  <ul id="violation-list"></ul>
+  <div id="warning" class="warning-msg"></div>
+
+  <script>
+    function fetchScore() {
+      fetch("/score_data")
+        .then(res => res.json())
+        .then(data => {
+          const score = data.score;
+          const violations = data.violations;
+
+          const scoreEl = document.getElementById("score-display");
+          scoreEl.textContent = `Score：${score} / 100`;
+
+          // 设置颜色
+          scoreEl.className = "score";
+          if (score >= 85) scoreEl.classList.add("green");
+          else if (score >= 60) scoreEl.classList.add("yellow");
+          else scoreEl.classList.add("red");
+
+          // 设置警告
+          const warnEl = document.getElementById("warning");
+          warnEl.textContent = score < 50 ? "❗ WARNING: The driver's dangerous driving behavior was extremely serious and required handling！" : "";
+
+          // 更新违规记录
+          const list = document.getElementById("violation-list");
+          list.innerHTML = "";
+          violations.forEach(v => {
+            const li = document.createElement("li");
+            li.textContent = "🔴 " + v;
+            list.appendChild(li);
+          });
+        });
+    }
+
+    setInterval(fetchScore, 1000);
+    fetchScore();
+  </script>
+</body>
+</html>
